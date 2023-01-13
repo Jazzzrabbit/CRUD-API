@@ -1,6 +1,6 @@
 import http from 'http';
 import * as dotenv from 'dotenv';
-import { getAllUsers, getUserById, createUser } from '../controller/userController.js';
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from '../controller/userController.js';
 import { validate } from 'uuid';
 
 dotenv.config();
@@ -10,18 +10,49 @@ const port = process.env.PORT || 3000;
 export const startServer = () => {
   http
     .createServer((req, res) => {
-      if (req.method === 'GET' && req.url === '/api/users') {
-        getAllUsers(req, res);
-      } else if (req.method === 'GET' && req.url?.match(/\/api\/users\/([0-9]+)/)) {
-        const id: string = req.url.split('/')[3];
-        if (validate(id)) {
-          getUserById(req, res, id);
-        } else {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'User id is invalid' }));
-        }   
-      } else if (req.method === 'POST' && req.url === '/api/users') {
-        createUser(req, res)
+      const url: string[] = req.url?.split('/') || [];
+      const id: string = req.url?.split('/')[3] || '';
+
+      if (url && url.length < 5) {
+        switch (req.method) {
+          case ('GET'): {
+            if (req.url === '/api/users') getAllUsers(req, res);
+            else if (url.length === 4 && id !== '') {       
+              if (validate(id)) {
+                getUserById(req, res, id);
+              } else {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'User id is invalid' }));
+              }
+            } else {
+              res.writeHead(404, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ message: 'Route not found' }));
+            }
+            break;
+          }
+          case ('POST'): {
+            if (req.url === '/api/users') createUser(req, res);
+            break;
+          }
+          case ('PUT'): {
+            if (validate(id)) {
+              updateUser(req, res, id);
+            } else {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ message: 'User id is invalid' }));
+            }
+            break;
+          }
+          case ('DELETE'): {
+            if (validate(id)) {
+              deleteUser(req, res, id);
+            } else {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ message: 'User id is invalid' }));
+            }
+            break;
+          }
+        }
       } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Route not found' }));
