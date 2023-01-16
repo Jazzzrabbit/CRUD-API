@@ -1,7 +1,7 @@
 Getting started: 
 
 1. clone this repo (git clone);
-2. switch to develop branch (git checkout develop);
+2. switch to dev branch (git checkout dev);
 3. install packages (npm i).
 
 Application mods: 
