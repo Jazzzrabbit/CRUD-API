@@ -18,5 +18,3 @@ Endpoints:
 4. PUT api/users/{userId} (e.g. http://localhost:3000/api/users/a21b773e-591b-4657-93cb-5f7ac1a2cb5b);
 5. DELETE api/users/{userId} (e.g. http://localhost:3000/api/users/a21b773e-591b-4657-93cb-5f7ac1a2cb5b);
 
-You can use POSTMAN to test this application.
-
