@@ -2,6 +2,16 @@ import { findAllUsers, findUser, addUser, update, remove } from "../model/userMo
 import http from 'http';
 import { IUser } from "../interface/IUser.js";
 
+const jsonCheck = async (body: string): Promise<boolean> => {
+  try {
+    JSON.parse(body);
+    return true;
+  } catch {
+    console.log('JSON is invalid');
+    return false;
+  }
+}
+
 export const getAllUsers = async (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingMessage>): Promise<void> => {
   try {
     const users: IUser[] = await findAllUsers();
@@ -39,17 +49,23 @@ export const createUser = async (req: http.IncomingMessage, res: http.ServerResp
     })
 
     req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage>> => {
-      const { username, age, hobbies } = JSON.parse(body);
+      const check: boolean = await jsonCheck(body);
+
+      if (!check) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: 'JSON is invalid' }));
+      }
+      
+      const { username, age, hobbies } = JSON.parse(body)
 
       if (!username || typeof username !== 'string') {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Username is required and must be a string' }));
+        
       } else if (!age || typeof age !== 'number') {
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Age is required and must be a number' }));
+        return res.end(JSON.stringify({ message: 'Age is required and must be a number' }));
       } else if (!hobbies || !Array.isArray(hobbies)) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Hobbies are required and must be an array' }));
+        return res.end(JSON.stringify({ message: 'Hobbies are required and must be an array' }));
       }
 
       const user: IUser = {
@@ -58,7 +74,7 @@ export const createUser = async (req: http.IncomingMessage, res: http.ServerResp
         hobbies
       };
 
-      const newUser = await addUser(user);
+      const newUser: IUser = await addUser(user);
       res.writeHead(201, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(newUser));
     });   
@@ -83,6 +99,13 @@ export const updateUser = async (req: http.IncomingMessage, res: http.ServerResp
     })
 
     req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage>> => {
+      const check: boolean = await jsonCheck(body);
+
+      if (!check) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: 'JSON is invalid' }));
+      }
+      
       const { username, age, hobbies } = JSON.parse(body);
 
       const updatedUser = {
@@ -95,7 +118,6 @@ export const updateUser = async (req: http.IncomingMessage, res: http.ServerResp
       await update(updatedUser, id);
       return res.end(JSON.stringify(updatedUser));
     })
-
   } catch (error) {
     console.error(error);
   }

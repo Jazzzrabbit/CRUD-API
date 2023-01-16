@@ -5,9 +5,7 @@ import { validate } from 'uuid';
 
 dotenv.config();
 
-const port = process.env.PORT || 3000;
-
-export const startServer = () => {
+export const startServer = (port: string | number) => {
   http
     .createServer((req, res) => {
       const url: string[] = req.url?.split('/') || [];
