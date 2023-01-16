@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import os from 'os';
 import cluster from 'cluster';
-import { startServer } from './app.js';
+import { startServer } from './app';
 
 dotenv.config();
 
@@ -18,6 +18,6 @@ export const startMultiServer = (port: string | number): void => {
     const currentPort: number = +port + workerId - 1;
     console.log(`Worker id: ${workerId}, pid: ${pid}, port: ${currentPort}`);
 
-    startServer(port);
+    startServer(currentPort);
   }
 };

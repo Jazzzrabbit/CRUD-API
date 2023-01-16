@@ -1,5 +1,5 @@
-import { startServer } from "./app/app.js";
-import { startMultiServer } from "./app/cluster.js";
+import { startServer } from "./app/app";
+import { startMultiServer } from "./app/cluster";
 
 const port: string | number = process.env.PORT || 3000;
 const mode: string = process.env.MODE || 'single';

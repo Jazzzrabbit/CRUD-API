@@ -1,6 +1,6 @@
-import { findAllUsers, findUser, addUser, update, remove } from "../model/userModel.js";
+import { findAllUsers, findUser, addUser, update, remove } from "../model/userModel";
 import http from 'http';
-import { IUser } from "../interface/IUser.js";
+import { IUser } from "../interface/IUser";
 
 const jsonCheck = async (body: string): Promise<boolean> => {
   try {
@@ -105,7 +105,7 @@ export const updateUser = async (req: http.IncomingMessage, res: http.ServerResp
         res.writeHead(400, { 'Content-Type': 'application/json' });
         return res.end(JSON.stringify({ message: 'JSON is invalid' }));
       }
-      
+
       const { username, age, hobbies } = JSON.parse(body);
 
       const updatedUser = {

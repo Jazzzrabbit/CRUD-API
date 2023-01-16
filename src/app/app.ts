@@ -1,6 +1,6 @@
 import http from 'http';
 import * as dotenv from 'dotenv';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from '../controller/userController.js';
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from '../controller/userController';
 import { validate } from 'uuid';
 
 dotenv.config();
