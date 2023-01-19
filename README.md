@@ -6,8 +6,8 @@ Getting started:
 
 Application mods: 
 
-1. development mode  (npm run start:dev);
-2. production mode (npm run start:prod);
+1. development mode  (npm run dev);
+2. production mode (npm run start);
 3. cluster mode (npm run start:multi).
 
 Endpoints: 
